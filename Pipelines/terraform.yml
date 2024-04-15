@@ -1,0 +1,20 @@
+format_version: 10
+pipelines:
+  tools-tf-apply:
+    group: Terraform
+    materials:
+      git-da613e5:
+        git: https://github.com/raghudevopsb78/tools-automation-code.git
+        shallow_clone: false
+        auto_update: true
+        branch: main
+    stages:
+    - APPLY:
+        fetch_materials: true
+        approval:
+          type: manual
+        jobs:
+          terraform-apply:
+            tasks:
+            - exec: {command: terraform, arguments: [ "init" ], run_if: passed}
+            - exec: {command: terraform, arguments: [ "apply", "-auto-approve" ], run_if: passed}
