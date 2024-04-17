@@ -38,7 +38,7 @@ resource "aws_route53_record" "record-internal" {
 resource "aws_iam_role" "role" {
   name = "${var.tool_name}-role"
 
-  assume_role_policy = jsonencode({
+   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
