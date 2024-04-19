@@ -1,0 +1,54 @@
+- name: Set Prompt
+  ansible.builtin.shell: set-prompt elk
+
+- name: Copy elastic repo
+  ansible.builtin.template:
+    src: elastic.repo
+    dest: /etc/yum.repos.d/elastic.repo
+
+- name: Install Elasticsearch
+  ansible.builtin.dnf:
+    name: elasticsearch
+    state: installed
+
+- name: Start Elasticsearch
+  ansible.builtin.systemd_service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Install Kibana
+  ansible.builtin.dnf:
+    name: kibana
+    state: installed
+
+- name: Update Kibana Config Port line
+  ansible.builtin.lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '^#server.port: 5601'
+    line: "server.port: 5601"
+
+- name: Update Kibana Config IP line
+  ansible.builtin.lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '^#server.host: localhost'
+    line: "server.host: 0.0.0.0"
+
+- name: Start Kibana
+  ansible.builtin.systemd_service:
+    name: kibana
+    state: restarted
+
+
+
+
+
+
+# Reset the password of the elastic built-in superuser with
+# /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+#
+# Generate an enrollment token for Kibana instances with
+# /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+#
+# Verification token for Kibana
+# /usr/share/kibana/bin/kibana-verification-code
