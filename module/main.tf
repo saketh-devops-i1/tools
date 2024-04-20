@@ -15,7 +15,16 @@ instance_market_options {
   tags = {
     Name = var.tool_name
   }
+  lifecycle {
+    ignore_changes = [
+      ami,
+    ]
+  }
 }
+
+
+
+
 
 resource "aws_route53_record" "record" {
   name    = var.tool_name
